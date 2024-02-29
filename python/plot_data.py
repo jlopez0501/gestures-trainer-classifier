@@ -15,10 +15,10 @@ if __name__ == "__main__":
     plt.figure(figsize=(10, 6))
 
     # Plot each column
-    plt.plot(df['q0'], label='q0')
-    plt.plot(df['q1'], label='q1')
-    plt.plot(df['q2'], label='q2')
-    plt.plot(df['q3'], label='q3')
+    plt.plot(df['timeMs'], df['q0'], label='q0')
+    plt.plot(df['timeMs'], df['q1'], label='q1')
+    plt.plot(df['timeMs'], df['q2'], label='q2')
+    plt.plot(df['timeMs'], df['q3'], label='q3')
 
     # Add labels and title
     plt.xlabel('Index')

@@ -20,14 +20,14 @@ ss = serial.Serial(args.port[0])
 _ = ss.readline() # first read may be incomplete, just toss it
 
 f = open("data.csv", 'w')
-f.write("deltaTime,q0,q1,q2,q3\n")
+f.write("timeMs,q0,q1,q2,q3\n")
 
 while True:
     raw_string = ss.readline().strip().decode()
 
     j = json.loads(raw_string)
     print(j)
-    s = str(j['deltaTime'] + ',' + j['quat_w']) + ',' + str(j['quat_x']) + ',' + str(j['quat_y']) + ',' + str(j['quat_z']) + '\n'
+    s = str(j['timeMs']) + ',' + str(j['quat_w']) + ',' + str(j['quat_x']) + ',' + str(j['quat_y']) + ',' + str(j['quat_z']) + '\n'
     f.write(s)
 
     '''

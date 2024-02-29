@@ -172,7 +172,9 @@ void loop()
       double q0 = sqrt(1.0 - ((q1 * q1) + (q2 * q2) + (q3 * q3)));
 
       // Output the Quaternion data in the format expected by ZaneL's Node.js Quaternion animation tool
-      SERIAL_PORT.print(F("{\"quat_w\":"));
+      SERIAL_PORT.print(F("{\"timeMs\":"));
+      SERIAL_PORT.print(millis());
+      SERIAL_PORT.print(F(", \"quat_w\":"));
       SERIAL_PORT.print(q0, 3);
       SERIAL_PORT.print(F(", \"quat_x\":"));
       SERIAL_PORT.print(q1, 3);

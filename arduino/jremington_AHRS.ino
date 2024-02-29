@@ -188,7 +188,9 @@ void loop()
       Serial.print(", ");
       Serial.print(roll, 0);
       */
-      Serial.print(F("{\"quat_w\":"));
+      Serial.print(F("{\"timeMs\":"));
+      Serial.print(millis());
+      Serial.print(F(", \"quat_w\":"));
       Serial.print(q[0], 3);
       Serial.print(F(", \"quat_x\":"));
       Serial.print(q[1], 3);
