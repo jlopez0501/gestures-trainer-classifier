@@ -188,17 +188,23 @@ void loop()
       Serial.print(", ");
       Serial.print(roll, 0);
       */
-      Serial.print(F("{\"timeMs\":"));
-      Serial.print(millis());
-      Serial.print(F(", \"quat_w\":"));
-      Serial.print(q[0], 3);
-      Serial.print(F(", \"quat_x\":"));
-      Serial.print(q[1], 3);
-      Serial.print(F(", \"quat_y\":"));
-      Serial.print(q[2], 3);
-      Serial.print(F(", \"quat_z\":"));
-      Serial.print(q[3], 3);
-      Serial.println(F("}"));
+      SERIAL_PORT.print(F("{\"timeMs\":"));
+      SERIAL_PORT.print(millis());
+      SERIAL_PORT.print(F(", \"accel_x\":"));
+      SERIAL_PORT.print(Axyz[0], 3);
+      SERIAL_PORT.print(F(", \"accel_y\":"));
+      SERIAL_PORT.print(Axyz[1], 3);
+      SERIAL_PORT.print(F(", \"accel_z\":"));
+      SERIAL_PORT.print(Axyz[2], 3);
+      SERIAL_PORT.print(F(", \"quat_w\":"));
+      SERIAL_PORT.print(q0, 3);
+      SERIAL_PORT.print(F(", \"quat_x\":"));
+      SERIAL_PORT.print(q1, 3);
+      SERIAL_PORT.print(F(", \"quat_y\":"));
+      SERIAL_PORT.print(q2, 3);
+      SERIAL_PORT.print(F(", \"quat_z\":"));
+      SERIAL_PORT.print(q3, 3);
+      SERIAL_PORT.println(F("}"));
       //          Serial.print(", ");  //prints 49 in 300 ms (~160 Hz) with 8 MHz ATmega328
       //          Serial.print(loop_counter);  //sample & update loops per print interval
       loop_counter = 0;

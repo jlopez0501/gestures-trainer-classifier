@@ -171,9 +171,19 @@ void loop()
       double q3 = ((double)data.Quat9.Data.Q3) / 1073741824.0; // Convert to double. Divide by 2^30
       double q0 = sqrt(1.0 - ((q1 * q1) + (q2 * q2) + (q3 * q3)));
 
+      float acc_x = (float)data.Raw_Accel.Data.X; // Extract the raw accelerometer data
+      float acc_y = (float)data.Raw_Accel.Data.Y;
+      float acc_z = (float)data.Raw_Accel.Data.Z;
+
       // Output the Quaternion data in the format expected by ZaneL's Node.js Quaternion animation tool
       SERIAL_PORT.print(F("{\"timeMs\":"));
       SERIAL_PORT.print(millis());
+      SERIAL_PORT.print(F(", \"accel_x\":"));
+      SERIAL_PORT.print(acc_x, 3);
+      SERIAL_PORT.print(F(", \"accel_y\":"));
+      SERIAL_PORT.print(acc_y, 3);
+      SERIAL_PORT.print(F(", \"accel_z\":"));
+      SERIAL_PORT.print(acc_z, 3);
       SERIAL_PORT.print(F(", \"quat_w\":"));
       SERIAL_PORT.print(q0, 3);
       SERIAL_PORT.print(F(", \"quat_x\":"));

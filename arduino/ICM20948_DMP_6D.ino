@@ -203,28 +203,19 @@ void loop()
       double t4 = +1.0 - 2.0 * (q2sqr + q3 * q3);
       double yaw = atan2(t3, t4) * 180.0 / PI;
       
-      /* 
-      SERIAL_PORT.print(F("q0:"));
-      SERIAL_PORT.print(q0, 3);
-      SERIAL_PORT.print(F("q1:"));
-      SERIAL_PORT.print(q1, 3);
-      SERIAL_PORT.print(F("q2:"));
-      SERIAL_PORT.print(q2, 3);
-      SERIAL_PORT.print(F("q3"));
-      SERIAL_PORT.println(q3, 3);
-
-      SERIAL_PORT.print(F("{\"Roll\":"));
-      SERIAL_PORT.print(roll, 3);
-      SERIAL_PORT.print(F(", \"Pitch:\":"));
-      SERIAL_PORT.print(pitch, 3);
-      SERIAL_PORT.print(F(", \"Yaw:\":"));
-      SERIAL_PORT.println(yaw, 3);
-      SERIAL_PORT.println(F("}"));
-      */
+      float acc_x = (float)data.Raw_Accel.Data.X; // Extract the raw accelerometer data
+      float acc_y = (float)data.Raw_Accel.Data.Y;
+      float acc_z = (float)data.Raw_Accel.Data.Z;
 
       // Output the Quaternion data in the format expected by ZaneL's Node.js Quaternion animation tool
       SERIAL_PORT.print(F("{\"timeMs\":"));
       SERIAL_PORT.print(millis());
+      SERIAL_PORT.print(F(", \"accel_x\":"));
+      SERIAL_PORT.print(acc_x, 3);
+      SERIAL_PORT.print(F(", \"accel_y\":"));
+      SERIAL_PORT.print(acc_y, 3);
+      SERIAL_PORT.print(F(", \"accel_z\":"));
+      SERIAL_PORT.print(acc_z, 3);
       SERIAL_PORT.print(F(", \"quat_w\":"));
       SERIAL_PORT.print(q0, 3);
       SERIAL_PORT.print(F(", \"quat_x\":"));

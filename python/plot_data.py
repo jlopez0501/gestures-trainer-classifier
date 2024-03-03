@@ -15,10 +15,11 @@ if __name__ == "__main__":
     plt.figure(figsize=(10, 6))
 
     # Plot each column
-    plt.plot(df['timeMs'], df['q0'], label='q0')
-    plt.plot(df['timeMs'], df['q1'], label='q1')
-    plt.plot(df['timeMs'], df['q2'], label='q2')
-    plt.plot(df['timeMs'], df['q3'], label='q3')
+    tSec = (df['timeMs'] - df['timeMs'].iloc[0])/1000
+    plt.plot(tSec, df['ax'], label='q0')
+    plt.plot(tSec, df['ay'], label='q1')
+    plt.plot(tSec, df['az'], label='q2')
+    plt.plot(tSec, df['q0'], label='q3')
 
     # Add labels and title
     plt.xlabel('Index')
