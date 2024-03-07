@@ -16,10 +16,13 @@ if __name__ == "__main__":
 
     # Plot each column
     tSec = (df['timeMs'] - df['timeMs'].iloc[0])/1000
-    plt.plot(tSec, df['ax'], label='q0')
-    plt.plot(tSec, df['ay'], label='q1')
-    plt.plot(tSec, df['az'], label='q2')
-    plt.plot(tSec, df['q0'], label='q3')
+    plt.plot(tSec, df['ax'], label='ax')
+    plt.plot(tSec, df['ay'], label='ay')
+    plt.plot(tSec, df['az'], label='az')
+    plt.plot(tSec, df['q0'], label='q0')
+    plt.plot(tSec, df['q1'], label='q1')
+    plt.plot(tSec, df['q2'], label='q2')
+    plt.plot(tSec, df['q3'], label='q3')
 
     # Add labels and title
     plt.xlabel('Index')
