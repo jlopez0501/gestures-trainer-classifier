@@ -22,16 +22,18 @@ _ = ss.readline() # first read may be incomplete, just toss it
 #### Exercise ####
 # file_name = "front_raise" + input("Front raise set number: ") + ".csv"
 # file_name = "shoulder_press" + input("Shoulder press set number: ") + ".csv"
-file_name = "curl" + input("Curl set number: ") + ".csv"
+# file_name = "curl" + input("Curl set number: ") + ".csv"
 # file_name = "side_raise" + input("Side raise set number: ") + ".csv"
+file_name = "french_press" + input("French press set number: ") + ".csv"
 
 ##################
 
 #### Exercise Directory ####
 # f = open("../DMP_9D_ACCEL_Logs/front_raise/" + file_name, 'w')
 # f = open("../DMP_9D_ACCEL_Logs/shoulder_press/" + file_name, 'w')
-f = open("../DMP_9D_ACCEL_Logs/curl/" + file_name, 'w')
-# f = open("../DMP_9D_ACCEL_Logs/side_raise/" + file_name, 'w')
+# f = open("../DMP_9D_ACCEL_Logs/curl/" + file_name, 'w')
+# f = open("../DMP_9D_ACCEL_Logs/side_raise_3_8/" + file_name, 'w')
+f = open("../DMP_9D_ACCEL_Logs/french_press_3_8/" + file_name, 'w')
 
 ############################
 
