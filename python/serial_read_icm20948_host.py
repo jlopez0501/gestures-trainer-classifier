@@ -20,23 +20,26 @@ ss = serial.Serial(args.port[0])
 _ = ss.readline() # first read may be incomplete, just toss it
 
 #### Exercise ####
-file_name = "front_raise" + input("Front raise set number: ") + ".csv"
+# file_name = "front_raise" + input("Front raise set number: ") + ".csv"
 # file_name = "shoulder_press" + input("Shoulder press set number: ") + ".csv"
 # file_name = "curl" + input("Curl set number: ") + ".csv"
 # file_name = "side_raise" + input("Side raise set number: ") + ".csv"
 # file_name = "french_press" + input("French press set number: ") + ".csv"
 # file_name = "dumbell_row" + input("Dumbell row set: ") + ".csv"
+# file_name = "barbell_bench_press" + input("Barbell bench press set: ") + ".csv"
+file_name = "rope_tricep_pushdown" + input("Rope tricep pushdown set: ") + ".csv"
 
 ##################
 
 #### Exercise Directory ####
-f = open("../DMP_9D_ACCEL_Logs/front_raise_3_10/" + file_name, 'w')
+# f = open("../DMP_9D_ACCEL_Logs/front_raise_3_10/" + file_name, 'w')
 # f = open("../DMP_9D_ACCEL_Logs/shoulder_press/" + file_name, 'w')
 # f = open("../DMP_9D_ACCEL_Logs/curl_3_10/" + file_name, 'w')
 # f = open("../DMP_9D_ACCEL_Logs/side_raise_3_8/" + file_name, 'w')
 # f = open("../DMP_9D_ACCEL_Logs/french_press_3_8/" + file_name, 'w')
 # f = open("../DMP_9D_ACCEL_Logs/dumbell_row_3_10/" + file_name, 'w')
-
+# f = open("../DMP_9D_ACCEL_Logs/barbell_bench_press_3_13/" + file_name, 'w')
+f = open("../DMP_9D_ACCEL_Logs/rope_tricep_pushdown_3_13/" + file_name, 'w')
 ############################
 
 f.write("timeMs,ax,ay,az,q0,q1,q2,q3\n")
