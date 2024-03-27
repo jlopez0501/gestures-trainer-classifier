@@ -18,9 +18,14 @@ port = args.port
 # setup model for prediction: setup buffer size, setup confidence, define class names, path to model
 # takes time to load model
 BUFFER_SIZE = 500
-confidence = 0.5
-class_names = ['barbell_bench_press', 'curl', 'dumbell_row', 'french_press', 'front_raise' 'non_exersice', 'rope_tricep_pushdown', 'shoulder_press', 'side_raise']
-gesture_model_path = '../notebooks/weights.best.hdf5'
+confidence = 0.3
+
+# Full dataset
+class_names = ['barbell_bench_press', 'curl', 'dumbell_row', 'french_press', 'front_raise', 'non_exersice', 'rope_tricep_pushdown', 'shoulder_press', 'side_raise']
+
+# 4 class dataset
+class_names = ['curl', 'front_raise', 'non_exersice', 'shoulder_press']
+gesture_model_path = './weights.best.hdf5'
 gesture_model = keras.models.load_model(gesture_model_path)
 
 # open serial port (NOTE: change location as needed)
@@ -55,6 +60,7 @@ while True:
             
             # run inference and post process
             y_pred = gesture_model.predict(np.array(buffer)[np.newaxis, :, :])
+            print(y_pred)
             max_confidence_index = np.argmax(y_pred, axis=1)[0]  # index with max confidence
             max_confidence_value = np.max(y_pred, axis=1)[0]  # max confidence
             print(max_confidence_value)
