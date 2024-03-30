@@ -41,7 +41,7 @@
 ICM_20948_I2C myICM; // Otherwise create an ICM_20948_I2C object
 
 // Device name
-const char* nameOfPeripheral = "IMUMonitor-Right";
+const char* nameOfPeripheral = "IMUMonitor-Left";
 const char* uuidOfService = "00001101-0000-1000-8000-00805f9b34fb";
 const char* uuidOfTxStruct = "00001143-0000-1000-8000-00805f9b34fb";
 
