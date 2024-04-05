@@ -3,7 +3,7 @@ import sys
 import matplotlib.pyplot as plt
 
 # Replace 'data.csv' with the actual name of your CSV file
-file_path = 'data.csv'
+file_path = '../DMP_9D_ACCEL_Logs/TEST/front_raise_3_30_front_raise2.csv'
 
 if __name__ == "__main__":
     if len(sys.argv) > 1:

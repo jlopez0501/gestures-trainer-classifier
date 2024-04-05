@@ -11,7 +11,8 @@ import struct
 
 root_path = os.environ["USERPROFILE"]
 
-output_file = "./data.csv"
+set_number = input("Input the current shoulder press set number: ")
+output_file = "../DMP_9D_ACCEL_Logs/shoulder_press/shoulder_press_3_29_shoulder_press" + str(set_number) + ".csv"
 
 selected_device = []
 

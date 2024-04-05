@@ -44,26 +44,26 @@ while True:
         raw_string = ss.readline().strip().decode()
         
         j = json.loads(raw_string)
-        #print(j)
+        # print(j)
         # get quarternions values
-        q0, q1, q2, q3 = j['quat_w'], j['quat_x'], j['quat_y'], j['quat_z']
+        ax, ay, az, q0, q1, q2, q3 = j['accel_x'], j['accel_y'], j['accel_x'], j['quat_w'], j['quat_x'], j['quat_y'], j['quat_z']
 
         # add quarternions to buffer
-        buffer.append([q0, q1, q2, q3])
+        buffer.append([ax, ay, az, q0, q1, q2, q3])
 
         # buffer has reached BUFFER_SIZE rows
         if len(buffer) >= BUFFER_SIZE:
             
             # run inference on the buffer
             print("Performing inference on %d rows of data" % (BUFFER_SIZE))
-            print(np.array(buffer).shape)
+            print("BUFFER SHAPE: " + str(np.array(buffer).shape))
             
             # run inference and post process
             y_pred = gesture_model.predict(np.array(buffer)[np.newaxis, :, :])
-            print(y_pred)
+            print("Y PRED: " + str(y_pred))
             max_confidence_index = np.argmax(y_pred, axis=1)[0]  # index with max confidence
             max_confidence_value = np.max(y_pred, axis=1)[0]  # max confidence
-            print(max_confidence_value)
+            print("MAX CONFIDENCE: " + str(max_confidence_value))
             # Check confidence threshold
             if max_confidence_value > confidence:
                 y_pred_label = class_names[max_confidence_index]
