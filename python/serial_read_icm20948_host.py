@@ -38,12 +38,12 @@ while True:
 
         
         ##### Exercise ###    
-        file_name = f"front_raise_3_30_front_raise{set_number}.csv"
+        # file_name = f"front_raise_3_30_front_raise{set_number}.csv"
         # file_name = "shoulder_press_3_29_shoulder_press" + input("Shoulder press set number: ") + ".csv"
-        # file_name = "curl" + input("Curl set number: ") + ".csv"
+        # file_name = f"curl_4_5_curl{set_number}.csv"
         # file_name = "side_raise" + input("Side raise set number: ") + ".csv"
         # file_name = "french_press" + input("French press set number: ") + ".csv"
-        # file_name = "dumbell_row" + input("Dumbell row set: ") + ".csv"
+        file_name = f"dumbell_row_4_5_dumbell_row{set_number}.csv"
         # file_name = "barbell_bench_press" + input("Barbell bench press set: ") + ".csv"
         # file_name = "rope_tricep_pushdown" + input("Rope tricep pushdown set: ") + ".csv"
 
@@ -55,13 +55,13 @@ while True:
 
         # f = open("../DMP_9D_ACCEL_Logs/front_raise/" + file_name, 'w')
         # f = open("../DMP_9D_ACCEL_Logs/shoulder_press/" + file_name, 'w')
-        # f = open("../DMP_9D_ACCEL_Logs/curl_3_10/" + file_name, 'w')
+        # f = open("../DMP_9D_ACCEL_Logs/curl/" + file_name, 'w')
         # f = open("../DMP_9D_ACCEL_Logs/side_raise_3_8/" + file_name, 'w')
         # f = open("../DMP_9D_ACCEL_Logs/french_press_3_8/" + file_name, 'w')
-        # f = open("../DMP_9D_ACCEL_Logs/dumbell_row_3_10/" + file_name, 'w')
+        f = open("../DMP_9D_ACCEL_Logs/dumbell_row/" + file_name, 'w')
         # f = open("../DMP_9D_ACCEL_Logs/barbell_bench_press_3_13/" + file_name, 'w')
         # f = open("../DMP_9D_ACCEL_Logs/rope_tricep_pushdown_3_13/" + file_name, 'w')
-        f = open("../DMP_9D_ACCEL_Logs/TEST/" + file_name, 'w')
+        # f = open("../DMP_9D_ACCEL_Logs/TEST/" + file_name, 'w')
         ############################
 
         f.write("timeMs,ax,ay,az,q0,q1,q2,q3\n")
@@ -83,9 +83,12 @@ while True:
                 # print them
                 print("Acceleration: X:%.2f, Y: %.2f, Z: %.2f m/s^2" %(data[0], data[1], data[2])) 
                 '''
+            except ValueError:
+                print("ValueError")
+                continue
             except KeyboardInterrupt:
                 loop_counter += 1
                 break
     except KeyboardInterrupt:
         print("Exiting...")
-        break
+        exit(1)
