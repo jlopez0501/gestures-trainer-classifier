@@ -175,7 +175,7 @@ void loop()
       float acc_y = (float)data.Raw_Accel.Data.Y;
       float acc_z = (float)data.Raw_Accel.Data.Z;
 
-      // Output the Quaternion data in the format expected by ZaneL's Node.js Quaternion animation tool
+    //  Output the Quaternion data in the format expected by ZaneL's Node.js Quaternion animation tool
       SERIAL_PORT.print(F("{\"timeMs\":"));
       SERIAL_PORT.print(millis());
       SERIAL_PORT.print(F(", \"accel_x\":"));
@@ -193,6 +193,24 @@ void loop()
       SERIAL_PORT.print(F(", \"quat_z\":"));
       SERIAL_PORT.print(q3, 3);
       SERIAL_PORT.println(F("}"));
+
+      // For edge impulse
+      // SERIAL_PORT.print(millis());
+      // SERIAL_PORT.print(",");
+      // SERIAL_PORT.print(acc_x, 3);
+      // SERIAL_PORT.print(",");
+      // SERIAL_PORT.print(acc_y, 3);
+      // SERIAL_PORT.print(",");
+      // SERIAL_PORT.print(acc_z, 3);
+      // SERIAL_PORT.print(",");
+      // SERIAL_PORT.print(q0, 3);
+      // SERIAL_PORT.print(",");
+      // SERIAL_PORT.print(q1, 3);
+      // SERIAL_PORT.print(",");
+      // SERIAL_PORT.print(q2, 3);
+      // SERIAL_PORT.print(",");
+      // SERIAL_PORT.print(q3, 3);
+      // SERIAL_PORT.println();
     }
   }
 
