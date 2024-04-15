@@ -19,8 +19,12 @@ port = args.port
 # ACCEL_CONVERSION = 9.80665 / 2^16 (converting g to m/s^2)
 ACCEL_CONVERSION = 0.000149637603759766
 
+#('ax', 'ay', 'az', 'q0', 'q1', 'q2', 'q3')
+MEANS = [0.1432, 0.3892, 0.157, 0.5813, 0.2167, 0.0768, 0.2132]
+STD_DEVS = [0.8514, 0.5977, 0.5952, 0.2345, 0.4629, 0.4047, 0.3618]
+
 # Location of tflite model file (float32 or int8 quantized)
-model_path = "ei-scaledaq-classifier-tensorflow-lite-float32-model.lite"
+model_path = "ei-scaledstandartizedaq-classifier-tensorflow-lite-float32-model.lite"
 
 # setup model for prediction: setup buffer size, setup confidence, define class names, path to model
 # takes time to load model
@@ -28,7 +32,7 @@ BUFFER_SIZE = 2184
 confidence = 0.3
 
 # 4 class dataset according to Edge Impulse
-class_names = ['curl', 'non_exersice']
+class_names = ['curl', 'non_exersice', 'shoulder_press']
 
 # Load TFLite model and allocate tensors.
 interpreter = tf.lite.Interpreter(model_path=model_path)
@@ -65,7 +69,16 @@ while True:
         ax, ay, az, q0, q1, q2, q3 = j['accel_x'], j['accel_y'], j['accel_x'], j['quat_w'], j['quat_x'], j['quat_y'], j['quat_z']
 
         # add accelerometer and quarternions to buffer
-        features.extend([ax*ACCEL_CONVERSION, ay*ACCEL_CONVERSION, az*ACCEL_CONVERSION, q0, q1, q2, q3])
+        #features.extend([ax*ACCEL_CONVERSION , ay*ACCEL_CONVERSION, az*ACCEL_CONVERSION, q0, q1, q2, q3])
+        
+        features.extend([(ax*ACCEL_CONVERSION - MEANS[0]) / STD_DEVS[0],
+                         (ay*ACCEL_CONVERSION - MEANS[1]) / STD_DEVS[1], 
+                         (az*ACCEL_CONVERSION - MEANS[2]) / STD_DEVS[2],
+                         (q0 - MEANS[3]) / STD_DEVS[3], 
+                         (q1 - MEANS[4]) / STD_DEVS[4],
+                         (q2 - MEANS[5]) / STD_DEVS[5],
+                         (q3 - MEANS[6]) / STD_DEVS[6]])
+
         #print(len(features))
         # buffer has reached BUFFER_SIZE rows
         if len(features) >= BUFFER_SIZE:
