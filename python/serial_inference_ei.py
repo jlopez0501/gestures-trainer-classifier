@@ -20,11 +20,18 @@ port = args.port
 ACCEL_CONVERSION = 0.000149637603759766
 
 #('ax', 'ay', 'az', 'q0', 'q1', 'q2', 'q3')
-MEANS = [0.1432, 0.3892, 0.157, 0.5813, 0.2167, 0.0768, 0.2132]
-STD_DEVS = [0.8514, 0.5977, 0.5952, 0.2345, 0.4629, 0.4047, 0.3618]
+# 15 April 2024
+#MEANS = [0.1432, 0.3892, 0.157, 0.5813, 0.2167, 0.0768, 0.2132]
+#STD_DEVS = [0.8514, 0.5977, 0.5952, 0.2345, 0.4629, 0.4047, 0.3618]
 
 # Location of tflite model file (float32 or int8 quantized)
-model_path = "ei-scaledstandartizedaq-classifier-tensorflow-lite-float32-model.lite"
+#model_path = "ei-scaledstandartizedaq-classifier-tensorflow-lite-float32-model.lite"
+
+# 18 April 2024
+MEANS = [0.3605, 0.469, 0.2769, 0.6313, 0.292, 0.0011, 0.2809]
+STD_DEVS = [0.8195, 0.5526, 0.5483, 0.2238, 0.3929, 0.367, 0.3133]
+
+model_path = "ei-scaledaq-classifier-tensorflow-lite-float32-model.lite"
 
 # setup model for prediction: setup buffer size, setup confidence, define class names, path to model
 # takes time to load model
@@ -32,7 +39,11 @@ BUFFER_SIZE = 2184
 confidence = 0.3
 
 # 4 class dataset according to Edge Impulse
-class_names = ['curl', 'non_exersice', 'shoulder_press']
+# 15 April 2024
+#class_names = ['curl', 'non_exersice', 'shoulder_press']
+
+# 18 April 2024
+class_names = ['curl', 'front_raise', 'non_exersice', 'shoulder_press']
 
 # Load TFLite model and allocate tensors.
 interpreter = tf.lite.Interpreter(model_path=model_path)
