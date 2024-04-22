@@ -1,13 +1,11 @@
-import numpy as np
-import tensorflow as tf
-
 import argparse
-import re
 import serial
-import time
 import json
 import numpy as np
-from tensorflow import keras
+import tensorflow as tf
+import matplotlib.pyplot as plt
+from drawnow import *
+
 
 parser = argparse.ArgumentParser()
 parser.add_argument("port", type=str, help="Serial port of the board", nargs=1)
@@ -32,10 +30,11 @@ MEANS = [0.3605, 0.469, 0.2769, 0.6313, 0.292, 0.0011, 0.2809]
 STD_DEVS = [0.8195, 0.5526, 0.5483, 0.2238, 0.3929, 0.367, 0.3133]
 
 model_path = "ei-scaledaq-classifier-tensorflow-lite-float32-model.lite"
+model_path = "ei-gym-sense-classifier-tensorflow-lite-float32-model_2sec250_lr1-4.lite"
 
 # setup model for prediction: setup buffer size, setup confidence, define class names, path to model
 # takes time to load model
-BUFFER_SIZE = 2184
+BUFFER_SIZE = 875
 confidence = 0.3
 
 # 4 class dataset according to Edge Impulse
@@ -44,6 +43,9 @@ confidence = 0.3
 
 # 18 April 2024
 class_names = ['curl', 'front_raise', 'non_exersice', 'shoulder_press']
+
+
+dist_array = [] # for updating values
 
 # Load TFLite model and allocate tensors.
 interpreter = tf.lite.Interpreter(model_path=model_path)
@@ -67,6 +69,16 @@ _ = ss.readline() # first read may be incomplete, just toss it
 
 # Processed features (copy from Edge Impulse project)
 features = []
+dist_array = []
+
+
+def makeFig(): #Create a function that makes our desired plot
+    plt.ylim(-2, 2)                                 #Set y min and max values
+    plt.title('Acc + Q')      #Plot the title
+    plt.grid(True)                                  #Turn the grid on
+    plt.ylabel('Temp F')                            #Set ylabels
+    plt.plot(dist_array, 'g',)       #plot the temperature
+      
 
 print("Start real-time predicitions")
 while True:
@@ -80,8 +92,8 @@ while True:
         ax, ay, az, q0, q1, q2, q3 = j['accel_x'], j['accel_y'], j['accel_x'], j['quat_w'], j['quat_x'], j['quat_y'], j['quat_z']
 
         # add accelerometer and quarternions to buffer
-        #features.extend([ax*ACCEL_CONVERSION , ay*ACCEL_CONVERSION, az*ACCEL_CONVERSION, q0, q1, q2, q3])
-        
+        dist_array.append([ax*ACCEL_CONVERSION , ay*ACCEL_CONVERSION, az*ACCEL_CONVERSION, q0, q1, q2, q3])
+        plt.pause(.000001)      
         features.extend([(ax*ACCEL_CONVERSION - MEANS[0]) / STD_DEVS[0],
                          (ay*ACCEL_CONVERSION - MEANS[1]) / STD_DEVS[1], 
                          (az*ACCEL_CONVERSION - MEANS[2]) / STD_DEVS[2],
@@ -93,6 +105,8 @@ while True:
         #print(len(features))
         # buffer has reached BUFFER_SIZE rows
         if len(features) >= BUFFER_SIZE:
+            
+            drawnow(makeFig)                       #Call drawnow to update our live graph
             
             # run inference on the buffer
             print("Performing inference on %d rows of data" % (BUFFER_SIZE))
@@ -127,6 +141,9 @@ while True:
 
             # clear the buffer to start collecting another 500 rows
             features.clear()
+            dist_array.clear();
 
     except KeyboardInterrupt:
+        ss.close()
+        plt.close()
         break
