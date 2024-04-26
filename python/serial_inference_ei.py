@@ -29,11 +29,17 @@ ACCEL_CONVERSION = 0.000149637603759766
 MEANS = [0.3605, 0.469, 0.2769, 0.6313, 0.292, 0.0011, 0.2809]
 STD_DEVS = [0.8195, 0.5526, 0.5483, 0.2238, 0.3929, 0.367, 0.3133]
 
+# 25 April 2024
+#MEANS =  [0.3213, 0.3953, 0.2408, 0.6125, 0.2481, 0.0299, 0.285]
+#STD_DEVS = [0.8994, 0.5695, 0.5539, 0.2348, 0.4228, 0.3778, 0.3243]
+
 model_path = "ei-scaledaq-classifier-tensorflow-lite-float32-model.lite"
 model_path = "ei-gym-sense-classifier-tensorflow-lite-float32-model_2sec250_lr1-4.lite"
+#model_path = 'ei-gym-sense-inc.-project-1-classifier-tensorflow-lite-float32-model.lite'
 
 # setup model for prediction: setup buffer size, setup confidence, define class names, path to model
 # takes time to load model
+# 18 April 2024
 BUFFER_SIZE = 875
 confidence = 0.3
 
