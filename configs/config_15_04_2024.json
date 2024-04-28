@@ -1,0 +1,7 @@
+{
+    "model_path": "../models/ei-scaledstandartizedaq-classifier-tensorflow-lite-float32-model.lite",
+    "means": [0.1432, 0.3892, 0.157, 0.5813, 0.2167, 0.0768, 0.2132],
+    "std_devs": [0.8514, 0.5977, 0.5952, 0.2345, 0.4629, 0.4047, 0.3618],
+    "buffer_size": 2184,
+    "class_names": ["curl", "non_exersice", "shoulder_press"]
+}

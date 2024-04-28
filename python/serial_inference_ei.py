@@ -7,49 +7,41 @@ import matplotlib.pyplot as plt
 from drawnow import *
 
 
-parser = argparse.ArgumentParser()
-parser.add_argument("port", type=str, help="Serial port of the board", nargs=1)
-args = parser.parse_args()
-port = args.port
-
 # Sensor sensitivities
 # Incoming Accel data is in fixed point. Where 1g = 2^16.
 # ACCEL_CONVERSION = 9.80665 / 2^16 (converting g to m/s^2)
 ACCEL_CONVERSION = 0.000149637603759766
 
-#('ax', 'ay', 'az', 'q0', 'q1', 'q2', 'q3')
-# 15 April 2024
-#MEANS = [0.1432, 0.3892, 0.157, 0.5813, 0.2167, 0.0768, 0.2132]
-#STD_DEVS = [0.8514, 0.5977, 0.5952, 0.2345, 0.4629, 0.4047, 0.3618]
-
-# Location of tflite model file (float32 or int8 quantized)
-#model_path = "ei-scaledstandartizedaq-classifier-tensorflow-lite-float32-model.lite"
-
-# 18 April 2024
-MEANS = [0.3605, 0.469, 0.2769, 0.6313, 0.292, 0.0011, 0.2809]
-STD_DEVS = [0.8195, 0.5526, 0.5483, 0.2238, 0.3929, 0.367, 0.3133]
-
-# 25 April 2024
-#MEANS =  [0.3213, 0.3953, 0.2408, 0.6125, 0.2481, 0.0299, 0.285]
-#STD_DEVS = [0.8994, 0.5695, 0.5539, 0.2348, 0.4228, 0.3778, 0.3243]
-
-model_path = "ei-scaledaq-classifier-tensorflow-lite-float32-model.lite"
-model_path = "ei-gym-sense-classifier-tensorflow-lite-float32-model_2sec250_lr1-4.lite"
-#model_path = 'ei-gym-sense-inc.-project-1-classifier-tensorflow-lite-float32-model.lite'
+parser = argparse.ArgumentParser()
+parser.add_argument("port", type=str, help="Serial port of the board", nargs=1)
+parser.add_argument("--config", type=str, help="Path to config", nargs=1, default="../configs/config_18_04_2024.json")
+args = parser.parse_args()
+port = args.port[0]
+config = args.config
 
 # setup model for prediction: setup buffer size, setup confidence, define class names, path to model
 # takes time to load model
-# 18 April 2024
-BUFFER_SIZE = 875
+print("Using config file: ", config)
+
+# Load the configuration from a JSON file
+with open(config, 'r') as f:
+    config = json.load(f)
+
+# Access the values in the dictionary
+model_path = config["model_path"]
+# Means and std devs ('ax', 'ay', 'az', 'q0', 'q1', 'q2', 'q3')
+means = config["means"]
+std_devs = config["std_devs"]
+buffer_size = config["buffer_size"]
+class_names = config["class_names"]
+
+print(model_path)
+print(means)
+print(std_devs)
+print(buffer_size)
+print(class_names)
+
 confidence = 0.3
-
-# 4 class dataset according to Edge Impulse
-# 15 April 2024
-#class_names = ['curl', 'non_exersice', 'shoulder_press']
-
-# 18 April 2024
-class_names = ['curl', 'front_raise', 'non_exersice', 'shoulder_press']
-
 
 dist_array = [] # for updating values
 
@@ -68,7 +60,7 @@ print(input_details)
 print(output_details)
 
 # open serial port (NOTE: change location as needed)
-ss = serial.Serial(args.port[0])
+ss = serial.Serial(port)
 
 # read string
 _ = ss.readline() # first read may be incomplete, just toss it
@@ -100,22 +92,22 @@ while True:
         # add accelerometer and quarternions to buffer
         dist_array.append([ax*ACCEL_CONVERSION , ay*ACCEL_CONVERSION, az*ACCEL_CONVERSION, q0, q1, q2, q3])
         plt.pause(.000001)      
-        features.extend([(ax*ACCEL_CONVERSION - MEANS[0]) / STD_DEVS[0],
-                         (ay*ACCEL_CONVERSION - MEANS[1]) / STD_DEVS[1], 
-                         (az*ACCEL_CONVERSION - MEANS[2]) / STD_DEVS[2],
-                         (q0 - MEANS[3]) / STD_DEVS[3], 
-                         (q1 - MEANS[4]) / STD_DEVS[4],
-                         (q2 - MEANS[5]) / STD_DEVS[5],
-                         (q3 - MEANS[6]) / STD_DEVS[6]])
+        features.extend([(ax*ACCEL_CONVERSION - means[0]) / std_devs[0],
+                         (ay*ACCEL_CONVERSION - means[1]) / std_devs[1], 
+                         (az*ACCEL_CONVERSION - means[2]) / std_devs[2],
+                         (q0 - means[3]) / std_devs[3], 
+                         (q1 - means[4]) / std_devs[4],
+                         (q2 - means[5]) / std_devs[5],
+                         (q3 - means[6]) / std_devs[6]])
 
         #print(len(features))
-        # buffer has reached BUFFER_SIZE rows
-        if len(features) >= BUFFER_SIZE:
+        # buffer has reached buffer_size rows
+        if len(features) >= buffer_size:
             
             drawnow(makeFig)                       #Call drawnow to update our live graph
             
             # run inference on the buffer
-            print("Performing inference on %d rows of data" % (BUFFER_SIZE))
+            print("Performing inference on %d rows of data" % (buffer_size))
             print("BUFFER SHAPE: " + str(np.array(features).shape))
             
             # Convert the feature list to a NumPy array of type float32
@@ -146,9 +138,10 @@ while True:
                 print('GESTURE: ', y_pred_label)
 
             # clear the buffer to start collecting another 500 rows
-            features.clear()
+            features.clear();
             dist_array.clear();
-
+    except json.JSONDecodeError:
+        print("Invalid JSON received. Skipping this line.")
     except KeyboardInterrupt:
         ss.close()
         plt.close()
