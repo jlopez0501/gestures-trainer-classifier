@@ -14,7 +14,7 @@ ACCEL_CONVERSION = 0.000149637603759766
 
 parser = argparse.ArgumentParser()
 parser.add_argument("port", type=str, help="Serial port of the board", nargs=1)
-parser.add_argument("--config", type=str, help="Path to config", nargs=1, default="../configs/config_18_04_2024.json")
+parser.add_argument("--config", type=str, help="Path to config", default="../configs/config_18_04_2024.json")
 args = parser.parse_args()
 port = args.port[0]
 config = args.config
