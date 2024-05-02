@@ -1,7 +1,8 @@
 {
-    "model_path": "../models/ei-gym-sense-inc.-project-1-classifier-tensorflow-lite-float32-model.lite",
+    "model_path": "../models/ei-gym-sense-inc.-project-1-classifier-tensorflow-lite-float32-model_2sec250ms_200e_5e4.lite",
     "means": [0.3213, 0.3953, 0.2408, 0.6125, 0.2481, 0.0299, 0.285],
     "std_devs": [0.8994, 0.5695, 0.5539, 0.2348, 0.4228, 0.3778, 0.3243],
     "buffer_size": 1309,
-    "class_names": ["curl", "front_raise", "non_exersice", "shoulder_press"]
+    "class_names": ["curl", "front_raise", "non_exersice", "shoulder_press"], 
+    "comments": "Augmented with noise 0.02"
 }
