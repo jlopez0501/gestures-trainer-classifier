@@ -48,9 +48,9 @@ while True:
         # file_name = f"side_raise_4_6_side_raise{set_number}.csv"
         # file_name = f"french_press_4_6_french_press{set_number}.csv"
         # file_name = f"dumbell_row_4_5_dumbell_row{set_number}.csv"
-        file_name = f"barbell_bench_press_4_12_barbell_bench_press{set_number}.csv"
+        # file_name = f"barbell_bench_press_4_12_barbell_bench_press{set_number}.csv"
         # file_name = f"rope_tricep_pushdown_4_12_rope_tricep_pushdown{set_number}.csv"
-
+        file_name = f"static_non_exercise_4_13_static_non_exercise{set_number}.csv"
         ##################
 
 
@@ -66,9 +66,10 @@ while True:
         # f = open("../DMP_9D_ACCEL_Logs/side_raise/" + file_name, 'w')
         # f = open("../DMP_9D_ACCEL_Logs/french_press/" + file_name, 'w')
         # f = open("../DMP_9D_ACCEL_Logs/dumbell_row/" + file_name, 'w')
-        f = open("../DMP_9D_ACCEL_Logs/barbell_bench_press/" + file_name, 'w')
+        # f = open("../DMP_9D_ACCEL_Logs/barbell_bench_press/" + file_name, 'w')
         # f = open("../DMP_9D_ACCEL_Logs/rope_tricep_pushdown/" + file_name, 'w')
         # f = open("../DMP_9D_ACCEL_Logs/TEST/" + file_name, 'w')
+        f = open("../DMP_9D_ACCEL_Logs/static_non_exercise/" + file_name, 'w')
         ############################
 
         f.write("timeMs,ax,ay,az,q0,q1,q2,q3\n")
