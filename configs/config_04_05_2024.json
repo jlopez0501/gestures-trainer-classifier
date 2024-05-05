@@ -1,0 +1,8 @@
+{
+    "model_path": "../models/cnn_plus_hammer_curl_130.tflite",
+    "means": [0.3981, 0.4978, 0.2766, 0.6055, 0.2624, -0.0003, 0.2684],
+    "std_devs": [0.8194, 0.557, 0.5193, 0.2391, 0.3964, 0.3843, 0.3613],
+    "buffer_size": 910,
+    "class_names": ["curl", "front_raise", "shoulder_press", "non_exersice", "hammer_curl"],
+    "comments": "CNN plus hammer_curl clas"
+}
