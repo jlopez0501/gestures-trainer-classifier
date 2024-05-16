@@ -1,0 +1,1 @@
+{"means": [0.4401, 0.5026, 0.225, 0.5947, 0.2694, -0.0407, 0.2378], "std_devs": [0.8218, 0.5361, 0.5233, 0.2392, 0.3975, 0.4034, 0.371], "class_names": ["curl", "dumbell_row", "front_raise", "hammer_curl", "non_exersice", "shoulder_press"], "buffer_size": 910, "comments": "Training pipeline automatization", "model_path": "../models/test_130_13.05.2024.tflite"}
