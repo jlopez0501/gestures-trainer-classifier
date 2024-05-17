@@ -1,0 +1,5 @@
+drawnow==0.72.5
+matplotlib==3.3.4
+numpy==1.26.4
+pyserial==3.5
+tensorflow==2.10.1
