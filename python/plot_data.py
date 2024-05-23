@@ -15,7 +15,12 @@ if __name__ == "__main__":
     plt.figure(figsize=(10, 6))
 
     # Plot each column
-    tSec = (df['timeMs'] - df['timeMs'].iloc[0])/1000
+    # Remove the 'timestamp' column if it exists
+    if 'timestamp' in df.columns:
+        tSec = (df['timestamp'] - df['timestamp'].iloc[0])/1000
+    elif 'timeMs' in df.columns:
+        tSec = (df['timeMs'] - df['timeMs'].iloc[0])/1000
+
     plt.plot(tSec, df['ax'], label='ax')
     plt.plot(tSec, df['ay'], label='ay')
     plt.plot(tSec, df['az'], label='az')
@@ -23,6 +28,8 @@ if __name__ == "__main__":
     plt.plot(tSec, df['q1'], label='q1')
     plt.plot(tSec, df['q2'], label='q2')
     plt.plot(tSec, df['q3'], label='q3')
+
+    plt.grid()
 
     # Add labels and title
     plt.xlabel('Index')
