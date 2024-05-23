@@ -41,15 +41,16 @@ This notebook is used to train the model with the prepared training and testing 
 - Stores model and update configuration file `test.json` with model name, class names, buffer size 
 
 
-# Inference
+## Inference
 
 To perform inference, you can use the following instructions:
 
-## 1. Online inference
+### 1. Online inference
 Capture data from IMU (connected USB device) speicified by --port and do inference using configuration file `../configs/test.json`
   
   `python serial_inference_custom.py online --port /dev/cu.usbmodem14201 --config ../configs/test.json`
 
-## 2. Offline inference
+### 2. Offline inference
 Uses RAW captured data from IMU (path to file) specified by parameter --file  and do inference using configuration file specifiedy by parameter --config `../configs/test.json`
+
   `python serial_inference_custom.py offline --config ../configs/test.json --file ../DMP_9D_ACCEL_Logs/curl/curl_3_10_curl1.csv`
