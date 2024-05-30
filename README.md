@@ -54,3 +54,16 @@ Capture data from IMU (connected USB device) speicified by --port and do inferen
 Uses RAW captured data from IMU (path to file) specified by parameter --file  and do inference using configuration file specifiedy by parameter --config `../configs/test.json`
 
   `python serial_inference_custom.py offline --config ../configs/test.json --file ../DMP_9D_ACCEL_Logs/curl/curl_3_10_curl1.csv`
+
+
+## Plot Data Graph
+
+The `plot_graph.py` script is used to visualize gesture data using different dimensionality reduction techniques and 3D plotting. 
+
+### Usage
+
+`python plot_graph.py --csv_path <path_to_csv> --plot_type <plot_type>`
+
+Arguments
+--csv_path: Path to the CSV file containing the gesture data.
+--plot_type: Type of plot to generate. Choices are **pca**, **tsne**, **umap**, or **3d**.
