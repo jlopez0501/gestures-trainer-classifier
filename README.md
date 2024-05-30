@@ -64,6 +64,6 @@ The `plot_graph.py` script is used to visualize gesture data using different dim
 
 `python plot_graph.py --csv_path <path_to_csv> --plot_type <plot_type>`
 
-Arguments
---csv_path: Path to the CSV file containing the gesture data.
---plot_type: Type of plot to generate. Choices are **pca**, **tsne**, **umap**, or **3d**.
+Arguments:
+1. --csv_path: Path to the CSV file containing the gesture data.
+2. --plot_type: Type of plot to generate. Choices are **pca**, **tsne**, **umap**, or **3d**.
