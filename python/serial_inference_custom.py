@@ -58,6 +58,7 @@ def load_model(model_path):
     return interpreter
 
 
+# This is for real-time data visualization
 def makeFig(): #Create a function that makes our desired plot
     plt.ylim(-2, 2)           #Set y min and max values
     plt.title('Acc + Q')      #Plot the title
