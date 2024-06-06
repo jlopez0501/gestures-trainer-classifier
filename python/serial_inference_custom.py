@@ -6,6 +6,7 @@ import tensorflow as tf
 import matplotlib.pyplot as plt
 from drawnow import *
 import pandas as pd
+from collections import deque
 
 
 # Sensor sensitivities
@@ -13,7 +14,7 @@ import pandas as pd
 # ACCEL_CONVERSION = 9.80665 / 2^16 (converting g to m/s^2)
 ACCEL_CONVERSION = 0.000149637603759766
 
-features = []
+
 dist_array = [] # for updating values
 confidence = 0.3
 
@@ -68,6 +69,9 @@ def makeFig(): #Create a function that makes our desired plot
 
 
 def online_inference(interpreter, port, means, std_devs, buffer_size, class_names):
+    new_elements_count = 0
+    # Initialize the list-queue with buffersize 
+    features = [0] * buffer_size
     # Get input and output tensors.
     input_details = interpreter.get_input_details()
     output_details = interpreter.get_output_details()
@@ -91,18 +95,26 @@ def online_inference(interpreter, port, means, std_devs, buffer_size, class_name
 
             # add accelerometer and quarternions to buffer
             dist_array.append([ax*ACCEL_CONVERSION , ay*ACCEL_CONVERSION, az*ACCEL_CONVERSION, q0, q1, q2, q3])
-            plt.pause(.000001)      
-            features.extend([(ax*ACCEL_CONVERSION - means[0]) / std_devs[0],
+            plt.pause(.000001)
+
+            f = [(ax*ACCEL_CONVERSION - means[0]) / std_devs[0],
                             (ay*ACCEL_CONVERSION - means[1]) / std_devs[1], 
                             (az*ACCEL_CONVERSION - means[2]) / std_devs[2],
                             (q0 - means[3]) / std_devs[3], 
                             (q1 - means[4]) / std_devs[4],
                             (q2 - means[5]) / std_devs[5],
-                            (q3 - means[6]) / std_devs[6]])
+                            (q3 - means[6]) / std_devs[6]]      
+            
+            # push newest measuremet (7 new values) to the buffer
+            features.extend(f)
 
-            #print(len(features))
-            # buffer has reached buffer_size rows
-            if len(features) >= buffer_size:
+            # pop oldest mesurements (7 first values) from the buffer
+            features = features[7:]
+
+            new_elements_count += 1
+
+            # queue half refreshed
+            if new_elements_count == buffer_size/2:
 
                 drawnow(makeFig)                       #Call drawnow to update our live graph
                 
@@ -139,7 +151,7 @@ def online_inference(interpreter, port, means, std_devs, buffer_size, class_name
                     print('GESTURE: ', y_pred_label)
 
                 # clear the buffer to start collecting another 500 rows
-                features.clear();
+                new_elements_count = 0
                 dist_array.clear();
         except json.JSONDecodeError:
             print("Invalid JSON received. Skipping this line.")
