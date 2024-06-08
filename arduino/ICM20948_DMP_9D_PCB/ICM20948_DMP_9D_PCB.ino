@@ -48,10 +48,8 @@ void setup()
 {
 
   SERIAL_PORT.begin(115200); // Start the serial console
-
+  
   delay(100);
-
-  SERIAL_PORT.println("Serial started"); // Debug print
 
   WIRE_PORT.begin(SDA_PIN, SCL_PIN);
   WIRE_PORT.setClock(400000);
@@ -154,8 +152,6 @@ void loop()
   icm_20948_DMP_data_t data;
   myICM.readDMPdataFromFIFO(&data);
 
-  SERIAL_PORT.println("TEST");
-
   if ((myICM.status == ICM_20948_Stat_Ok) || (myICM.status == ICM_20948_Stat_FIFOMoreDataAvail)) // Was valid data available?
   {
     //SERIAL_PORT.print(F("Received data! Header: 0x")); // Print the header in HEX so we can see what data is arriving in the FIFO
@@ -183,15 +179,29 @@ void loop()
       float acc_y = (float)data.Raw_Accel.Data.Y;
       float acc_z = (float)data.Raw_Accel.Data.Z;
 
+      float gyro_x = (float)data.Raw_Gyro.Data.X;
+      float gyro_y = (float)data.Raw_Gyro.Data.Y;
+      float gyro_z = (float)data.Raw_Gyro.Data.Z;
+
+
     //  Output the Quaternion data in the format expected by ZaneL's Node.js Quaternion animation tool
       SERIAL_PORT.print(F("{\"timeMs\":"));
       SERIAL_PORT.print(millis());
+
       SERIAL_PORT.print(F(", \"accel_x\":"));
       SERIAL_PORT.print(acc_x, 3);
       SERIAL_PORT.print(F(", \"accel_y\":"));
       SERIAL_PORT.print(acc_y, 3);
       SERIAL_PORT.print(F(", \"accel_z\":"));
       SERIAL_PORT.print(acc_z, 3);
+
+      SERIAL_PORT.print(F(", \"gyro_x\":"));
+      SERIAL_PORT.print(gyro_x, 3);
+      SERIAL_PORT.print(F(", \"gyro_y\":"));
+      SERIAL_PORT.print(gyro_y, 3);
+      SERIAL_PORT.print(F(", \"gyro_z\":"));
+      SERIAL_PORT.print(gyro_z, 3);
+
       SERIAL_PORT.print(F(", \"quat_w\":"));
       SERIAL_PORT.print(q0, 3);
       SERIAL_PORT.print(F(", \"quat_x\":"));
@@ -200,6 +210,7 @@ void loop()
       SERIAL_PORT.print(q2, 3);
       SERIAL_PORT.print(F(", \"quat_z\":"));
       SERIAL_PORT.print(q3, 3);
+
       SERIAL_PORT.println(F("}"));
 
       // For edge impulse
