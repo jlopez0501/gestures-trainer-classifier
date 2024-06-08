@@ -114,7 +114,7 @@ def online_inference(interpreter, port, means, std_devs, buffer_size, class_name
             new_elements_count += 1
 
             # queue half refreshed
-            if new_elements_count == buffer_size/2:
+            if new_elements_count == buffer_size//4:
 
                 drawnow(makeFig)                       #Call drawnow to update our live graph
                 
@@ -177,12 +177,26 @@ def read_csv_without_timestamp(filename):
     return df
 
 
-def split_dataframe(df, chunk_size):
+def split_dataframe(df, chunk_size, overlap = 0):
     # Calculate number of rows per chunk based on the chunk size
-    rows_per_chunk = int(chunk_size / df.shape[1])
+    rows_per_chunk = chunk_size // df.shape[1]
+
+    print("Rows per chunk : ", rows_per_chunk)
+
+    # Calculate the step size to account for overlap
+    step_size = rows_per_chunk - overlap // df.shape[1]
+    print("Step size  : ", step_size)
 
     # Split DataFrame into chunks of specified size
-    chunks = [df.iloc[i:i+rows_per_chunk] for i in range(0, len(df), rows_per_chunk)]
+    chunks = [df.iloc[i:i+rows_per_chunk] for i in range(0, len(df) - rows_per_chunk + 1, step_size)]
+
+    print("Chunks number : ", len(chunks))
+
+
+    # Handle the last chunk if it was not included
+    if len(df) % step_size != 0:
+        chunks.append(df.iloc[-rows_per_chunk:])
+
     return chunks
 
 
@@ -192,8 +206,9 @@ def offline_inference(interpreter, file, means, std_devs, buffer_size, class_nam
     output_details = interpreter.get_output_details()
     
     df = read_csv_without_timestamp(file)
-
-    cs = split_dataframe(df, buffer_size)
+    print("DataFrame size : ", df.shape)
+    cs = split_dataframe(df, buffer_size, overlap = int(buffer_size/4))
+    print("Chunk num : ", len(cs))
 
     for i in cs:
         print(len(i))
