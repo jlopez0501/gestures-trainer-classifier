@@ -50,7 +50,7 @@ while True:
         # file_name = f"dumbell_row_4_5_dumbell_row{set_number}.csv"
         # file_name = f"barbell_bench_press_4_12_barbell_bench_press{set_number}.csv"
         # file_name = f"rope_tricep_pushdown_4_12_rope_tricep_pushdown{set_number}.csv"
-        file_name = f"static_non_exercise_4_13_static_non_exercise{set_number}.csv"
+        file_name = f"gyro{set_number}.csv"
         ##################
 
 
@@ -68,11 +68,11 @@ while True:
         # f = open("../DMP_9D_ACCEL_Logs/dumbell_row/" + file_name, 'w')
         # f = open("../DMP_9D_ACCEL_Logs/barbell_bench_press/" + file_name, 'w')
         # f = open("../DMP_9D_ACCEL_Logs/rope_tricep_pushdown/" + file_name, 'w')
-        # f = open("../DMP_9D_ACCEL_Logs/TEST/" + file_name, 'w')
-        f = open("../DMP_9D_ACCEL_Logs/static_non_exercise/" + file_name, 'w')
+        f = open("../DMP_9D_ACCEL_Logs/TEST/" + file_name, 'w')
+        #f = open("../DMP_9D_ACCEL_Logs/static_non_exercise/" + file_name, 'w')
         ############################
 
-        f.write("timeMs,ax,ay,az,q0,q1,q2,q3\n")
+        f.write("timeMs,ax,ay,az,gx,gy,gz,q0,q1,q2,q3\n")
         
         while True:
             # New try statement
@@ -81,7 +81,7 @@ while True:
                 
                 j = json.loads(raw_string)
                 print(j)
-                s = str(j['timeMs']) + ',' + str(j['accel_x']) + ',' + str(j['accel_y']) + ',' + str(j['accel_z']) + ',' + str(j['quat_w']) + ',' + str(j['quat_x']) + ',' + str(j['quat_y']) + ',' + str(j['quat_z']) + '\n'
+                s = str(j['timeMs']) + ',' + str(j['accel_x']) + ',' + str(j['accel_y']) + ',' + str(j['accel_z']) + ',' + str(j['gyro_x']) + ',' + str(j['gyro_y']) + ',' + str(j['gyro_z']) + ',' + str(j['quat_w']) + ',' + str(j['quat_x']) + ',' + str(j['quat_y']) + ',' + str(j['quat_z']) + '\n'
                 f.write(s)
 
                 '''

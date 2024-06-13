@@ -14,6 +14,9 @@ from collections import deque
 # ACCEL_CONVERSION = 9.80665 / 2^16 (converting g to m/s^2)
 ACCEL_CONVERSION = 0.000149637603759766
 
+# Incoming Gyro data is in fixed point. Where 1dps = 2^16.
+# GYRO_CONVERSION = PI / 2^16 / 180 (converting dps to rads/s)
+GYRO_CONVERSION  = 2.66316109007924e-007
 
 dist_array = [] # for updating values
 confidence = 0.3
