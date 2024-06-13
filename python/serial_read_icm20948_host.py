@@ -58,6 +58,7 @@ while True:
         file_name = f"dumbell_fly_6_1_dumbell_fly{set_number}"
 
 
+        file_name = f"gyro{set_number}.csv"
         ##################
 
 
@@ -85,7 +86,7 @@ while True:
 
         ############################
 
-        f.write("timeMs,ax,ay,az,q0,q1,q2,q3\n")
+        f.write("timeMs,ax,ay,az,gx,gy,gz,q0,q1,q2,q3\n")
         
         while True:
             # New try statement
@@ -94,7 +95,7 @@ while True:
                 
                 j = json.loads(raw_string)
                 print(j)
-                s = str(j['timeMs']) + ',' + str(j['accel_x']) + ',' + str(j['accel_y']) + ',' + str(j['accel_z']) + ',' + str(j['quat_w']) + ',' + str(j['quat_x']) + ',' + str(j['quat_y']) + ',' + str(j['quat_z']) + '\n'
+                s = str(j['timeMs']) + ',' + str(j['accel_x']) + ',' + str(j['accel_y']) + ',' + str(j['accel_z']) + ',' + str(j['gyro_x']) + ',' + str(j['gyro_y']) + ',' + str(j['gyro_z']) + ',' + str(j['quat_w']) + ',' + str(j['quat_x']) + ',' + str(j['quat_y']) + ',' + str(j['quat_z']) + '\n'
                 f.write(s)
 
                 '''
