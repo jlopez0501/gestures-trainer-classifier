@@ -179,12 +179,12 @@ def read_csv_without_timestamp(filename):
 
 def split_dataframe(df, chunk_size, overlap = 0):
     # Calculate number of rows per chunk based on the chunk size
-    rows_per_chunk = chunk_size // df.shape[1]
+    rows_per_chunk = chunk_size // 7#df.shape[1]
 
     print("Rows per chunk : ", rows_per_chunk)
 
     # Calculate the step size to account for overlap
-    step_size = rows_per_chunk - overlap // df.shape[1]
+    step_size = rows_per_chunk - overlap // 7#df.shape[1]
     print("Step size  : ", step_size)
 
     # Split DataFrame into chunks of specified size
@@ -207,18 +207,25 @@ def offline_inference(interpreter, file, means, std_devs, buffer_size, class_nam
     
     df = read_csv_without_timestamp(file)
     print("DataFrame size : ", df.shape)
+    
     cs = split_dataframe(df, buffer_size, overlap = int(buffer_size/4))
     print("Chunk num : ", len(cs))
 
     for i in cs:
         print(len(i))
         print(np.floor(buffer_size / df.shape[1]))
-        if len(i) == np.floor(buffer_size / df.shape[1]):        
+        if len(i) == np.floor(buffer_size / df.shape[1]):
+            # updated preprocessing stage be similar to the online inference
+            i['ax'] = (i['ax']*ACCEL_CONVERSION - means[0]) / std_devs[0]
+            i['ay'] = (i['ay']*ACCEL_CONVERSION - means[1]) / std_devs[1]
+            i['az'] = (i['az']*ACCEL_CONVERSION - means[2]) / std_devs[2]
+            i['q0'] = (i['q0'] - means[3]) / std_devs[3]
+            i['q1'] = (i['q1'] - means[4]) / std_devs[4]
+            i['q2'] = (i['q2'] - means[5]) / std_devs[5]
+            i['q3'] = (i['q3'] - means[6]) / std_devs[6]
+
             features = i.values.flatten().tolist()
             features = np.array(features).reshape(-1, 7)
-
-            features = features - means
-            features = features / std_devs
 
             features = features.flatten().tolist()
 
