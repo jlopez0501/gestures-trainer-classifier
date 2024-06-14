@@ -14,6 +14,9 @@ from collections import deque
 # ACCEL_CONVERSION = 9.80665 / 2^16 (converting g to m/s^2)
 ACCEL_CONVERSION = 0.000149637603759766
 
+# Incoming Gyro data is in fixed point. Where 1dps = 2^16.
+# GYRO_CONVERSION = PI / 2^16 / 180 (converting dps to rads/s)
+GYRO_CONVERSION  = 2.66316109007924e-007
 
 dist_array = [] # for updating values
 confidence = 0.3
@@ -70,8 +73,10 @@ def makeFig(): #Create a function that makes our desired plot
 
 def online_inference(interpreter, port, means, std_devs, buffer_size, class_names):
     new_elements_count = 0
+    new_history_count = 0
     # Initialize the list-queue with buffersize 
     features = [0] * buffer_size
+    gesture_history = []# history of the last 10 gestures 
     # Get input and output tensors.
     input_details = interpreter.get_input_details()
     output_details = interpreter.get_output_details()
@@ -148,7 +153,20 @@ def online_inference(interpreter, port, means, std_devs, buffer_size, class_name
                 # Check confidence threshold
                 if max_confidence_value > confidence:
                     y_pred_label = class_names[max_confidence_index]
-                    print('GESTURE: ', y_pred_label)
+                    print('Instant GESTURE: ', y_pred_label)
+
+                    # here store history values
+                    gesture_history.extend([y_pred_label])
+                    new_history_count += 1
+
+                    if new_history_count == 5:
+                        most_common = max(set(gesture_history), key = gesture_history.count)
+                        print(gesture_history)
+                        print("Common GESTURE: ", most_common)
+                        # remove the oldest gesture
+                        gesture_history = gesture_history[1:]
+                        new_history_count = 4
+
 
                 # clear the buffer to start collecting another 500 rows
                 new_elements_count = 0
@@ -207,18 +225,25 @@ def offline_inference(interpreter, file, means, std_devs, buffer_size, class_nam
     
     df = read_csv_without_timestamp(file)
     print("DataFrame size : ", df.shape)
+    
     cs = split_dataframe(df, buffer_size, overlap = int(buffer_size/4))
     print("Chunk num : ", len(cs))
 
     for i in cs:
         print(len(i))
         print(np.floor(buffer_size / df.shape[1]))
-        if len(i) == np.floor(buffer_size / df.shape[1]):        
+        if len(i) == np.floor(buffer_size / df.shape[1]):
+            # updated preprocessing stage be similar to the online inference
+            i['ax'] = (i['ax']*ACCEL_CONVERSION - means[0]) / std_devs[0]
+            i['ay'] = (i['ay']*ACCEL_CONVERSION - means[1]) / std_devs[1]
+            i['az'] = (i['az']*ACCEL_CONVERSION - means[2]) / std_devs[2]
+            i['q0'] = (i['q0'] - means[3]) / std_devs[3]
+            i['q1'] = (i['q1'] - means[4]) / std_devs[4]
+            i['q2'] = (i['q2'] - means[5]) / std_devs[5]
+            i['q3'] = (i['q3'] - means[6]) / std_devs[6]
+
             features = i.values.flatten().tolist()
             features = np.array(features).reshape(-1, 7)
-
-            features = features - means
-            features = features / std_devs
 
             features = features.flatten().tolist()
 
