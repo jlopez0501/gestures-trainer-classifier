@@ -55,17 +55,23 @@ while True:
         # file_name = f"squat_6_1_squat{set_number}.csv"
         # file_name = f"bench_dips_6_1_bench_dips{set_number}"
         # file_name = f"dumbell_shrugs_6_1_dumbell_shrugs{set_number}"
-        file_name = f"dumbell_fly_6_1_dumbell_fly{set_number}"
+        # file_name = f"dumbell_fly_6_1_dumbell_fly{set_number}"
 
 
-        file_name = f"gyro{set_number}.csv"
+        # file_name = f"gyro_curl_6_13_set{set_number}.csv"
+        # file_name = f"gyro_shoulder_press_6_13_set{set_number}.csv"
+        # file_name = f"gyro_front_raise_6_13_set{set_number}.csv"
+        file_name = f"gyro_hammer_curl_6_13_set{set_number}.csv"
+
+
+
         ##################
 
 
 
         #### Exercise Directory ####
 
-        # f = open("../DMP_9D_ACCEL_Logs/hammer_curl/" + file_name, 'w')
+        f = open("../DMP_9D_ACCEL_Logs/hammer_curl/" + file_name, 'w')
         # f = open("../DMP_9D_ACCEL_Logs/pullup/" + file_name, 'w')
         # f = open("../DMP_9D_ACCEL_Logs/pushups/" + file_name, 'w')
         # f = open("../DMP_9D_ACCEL_Logs/front_raise/" + file_name, 'w')
@@ -82,7 +88,7 @@ while True:
         # f = open("../DMP_9D_ACCEL_Logs/squat/" + file_name, 'w')
         # f = open("../DMP_9D_ACCEL_Logs/bench_dips/" + file_name, 'w')
         # f = open("../DMP_9D_ACCEL_Logs/dumbell_shrugs/" + file_name, 'w')
-        f = open("../DMP_9D_ACCEL_Logs/dumbell_fly/" + file_name, 'w')
+        # f = open("../DMP_9D_ACCEL_Logs/dumbell_fly/" + file_name, 'w')
 
         ############################
 
