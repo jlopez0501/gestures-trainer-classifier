@@ -73,8 +73,10 @@ def makeFig(): #Create a function that makes our desired plot
 
 def online_inference(interpreter, port, means, std_devs, buffer_size, class_names):
     new_elements_count = 0
+    new_history_count = 0
     # Initialize the list-queue with buffersize 
     features = [0] * buffer_size
+    gesture_history = []# history of the last 10 gestures 
     # Get input and output tensors.
     input_details = interpreter.get_input_details()
     output_details = interpreter.get_output_details()
@@ -151,7 +153,20 @@ def online_inference(interpreter, port, means, std_devs, buffer_size, class_name
                 # Check confidence threshold
                 if max_confidence_value > confidence:
                     y_pred_label = class_names[max_confidence_index]
-                    print('GESTURE: ', y_pred_label)
+                    print('Instant GESTURE: ', y_pred_label)
+
+                    # here store history values
+                    gesture_history.extend([y_pred_label])
+                    new_history_count += 1
+
+                    if new_history_count == 5:
+                        most_common = max(set(gesture_history), key = gesture_history.count)
+                        print(gesture_history)
+                        print("Common GESTURE: ", most_common)
+                        # remove the oldest gesture
+                        gesture_history = gesture_history[1:]
+                        new_history_count = 4
+
 
                 # clear the buffer to start collecting another 500 rows
                 new_elements_count = 0
@@ -182,12 +197,12 @@ def read_csv_without_timestamp(filename):
 
 def split_dataframe(df, chunk_size, overlap = 0):
     # Calculate number of rows per chunk based on the chunk size
-    rows_per_chunk = chunk_size // 7#df.shape[1]
+    rows_per_chunk = chunk_size // df.shape[1]
 
     print("Rows per chunk : ", rows_per_chunk)
 
     # Calculate the step size to account for overlap
-    step_size = rows_per_chunk - overlap // 7#df.shape[1]
+    step_size = rows_per_chunk - overlap // df.shape[1]
     print("Step size  : ", step_size)
 
     # Split DataFrame into chunks of specified size

@@ -1,0 +1,1 @@
+{"means": [0.4148, 0.3893, 0.0597, 0.5135, 0.1594, -0.0137, 0.2123], "std_devs": [0.9879, 0.5777, 0.4762, 0.244, 0.4624, 0.4615, 0.4235], "class_names": ["curl", "dumbell_row", "front_raise", "hammer_curl", "shoulder_press"], "buffer_size": 910, "comments": "Overlap", "model_path": "../models/test_cut_130_14.06.2024.tflite"}
