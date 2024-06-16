@@ -23,7 +23,7 @@ confidence = 0.3
 
 def load_config(config):
     # Load the configuration from a JSON file
-    with open(config, 'r') as f:
+    with open(config, 'r', encoding='utf-8-sig') as f:
         config = json.load(f)
 
     # Access the values in the dictionary
