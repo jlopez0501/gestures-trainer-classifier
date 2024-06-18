@@ -64,11 +64,11 @@ def load_model(model_path):
 
 # This is for real-time data visualization
 def makeFig(): #Create a function that makes our desired plot
-    plt.ylim(-2, 2)           #Set y min and max values
-    plt.title('Acc + Q')      #Plot the title
-    plt.grid(True)            #Turn the grid on
-    plt.ylabel('Temp F')      #Set ylabels
-    plt.plot(dist_array, 'g',)#plot the IMU data
+    #plt.ylim(-2, 2)            #Set y min and max values
+    plt.title('Acc + Q')        #Plot the title
+    plt.grid(True)              #Turn the grid on
+    plt.ylabel('Amplitude')     #Set ylabels
+    plt.plot(dist_array, 'g',)  #plot the IMU data
 
 
 def online_inference(interpreter, port, means, std_devs, buffer_size, class_names):
@@ -98,30 +98,33 @@ def online_inference(interpreter, port, means, std_devs, buffer_size, class_name
             # get accelerometer and quarternions values
             ax, ay, az, q0, q1, q2, q3 = j['accel_x'], j['accel_y'], j['accel_x'], j['quat_w'], j['quat_x'], j['quat_y'], j['quat_z']
 
-            # add accelerometer and quarternions to buffer
-            dist_array.append([ax*ACCEL_CONVERSION , ay*ACCEL_CONVERSION, az*ACCEL_CONVERSION, q0, q1, q2, q3])
             plt.pause(.000001)
 
+            # format and normalize the data
             f = [(ax*ACCEL_CONVERSION - means[0]) / std_devs[0],
-                            (ay*ACCEL_CONVERSION - means[1]) / std_devs[1], 
-                            (az*ACCEL_CONVERSION - means[2]) / std_devs[2],
-                            (q0 - means[3]) / std_devs[3], 
-                            (q1 - means[4]) / std_devs[4],
-                            (q2 - means[5]) / std_devs[5],
-                            (q3 - means[6]) / std_devs[6]]      
-            
+                (ay*ACCEL_CONVERSION - means[1]) / std_devs[1],
+                (az*ACCEL_CONVERSION - means[2]) / std_devs[2],
+                (q0 - means[3]) / std_devs[3],
+                (q1 - means[4]) / std_devs[4],
+                (q2 - means[5]) / std_devs[5],
+                (q3 - means[6]) / std_devs[6]]
+
+            # add accelerometer and quarternions to buffer
+            dist_array.append(f)
+
             # push newest measuremet (7 new values) to the buffer
             features.extend(f)
 
             # pop oldest mesurements (7 first values) from the buffer
             features = features[7:]
 
+            # count the number of new elements for sliding window
             new_elements_count += 1
 
-            # queue half refreshed
+            # check if we have enough data to run inference
             if new_elements_count == buffer_size//4:
-
-                drawnow(makeFig)                       #Call drawnow to update our live graph
+                #Call drawnow to update our live graph
+                drawnow(makeFig)
                 
                 # run inference on the buffer
                 print("Performing inference on %d rows of data" % (buffer_size))
@@ -132,7 +135,6 @@ def online_inference(interpreter, port, means, std_devs, buffer_size, class_name
                 np_features = np_features.reshape((1, int(buffer_size/7), 7, 1))
                 # Add dimension to input sample (TFLite model expects (# samples, data))
                 #np_features = np.expand_dims(np_features, axis=0)
-
 
                 # Create input tensor out of raw features
                 interpreter.set_tensor(input_details[0]['index'], np_features)
@@ -166,7 +168,6 @@ def online_inference(interpreter, port, means, std_devs, buffer_size, class_name
                         # remove the oldest gesture
                         gesture_history = gesture_history[1:]
                         new_history_count = 4
-
 
                 # clear the buffer to start collecting another 500 rows
                 new_elements_count = 0
