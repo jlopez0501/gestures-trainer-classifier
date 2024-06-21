@@ -20,6 +20,7 @@ GYRO_CONVERSION  = 2.66316109007924e-007
 
 dist_array = [] # for updating values
 confidence = 0.3
+FEATURE_LEN = 10
 
 def load_config(config):
     # Load the configuration from a JSON file
@@ -96,7 +97,10 @@ def online_inference(interpreter, port, means, std_devs, buffer_size, class_name
             j = json.loads(raw_string)
             # print(j)
             # get accelerometer and quarternions values
-            ax, ay, az, q0, q1, q2, q3 = j['accel_x'], j['accel_y'], j['accel_x'], j['quat_w'], j['quat_x'], j['quat_y'], j['quat_z']
+            ax, ay, az, gx, gy, gz, q0, q1, q2, q3 = \
+                j['accel_x'], j['accel_y'], j['accel_x'], \
+                j['gyro_x'], j['gyro_y'], j['gyro_z'], \
+                j['quat_w'], j['quat_x'], j['quat_y'], j['quat_z']
 
             plt.pause(.000001)
 
@@ -104,19 +108,22 @@ def online_inference(interpreter, port, means, std_devs, buffer_size, class_name
             f = [(ax*ACCEL_CONVERSION - means[0]) / std_devs[0],
                 (ay*ACCEL_CONVERSION - means[1]) / std_devs[1],
                 (az*ACCEL_CONVERSION - means[2]) / std_devs[2],
-                (q0 - means[3]) / std_devs[3],
-                (q1 - means[4]) / std_devs[4],
-                (q2 - means[5]) / std_devs[5],
-                (q3 - means[6]) / std_devs[6]]
+                (gx - means[3]) / std_devs[3],
+                (gy - means[4]) / std_devs[4],
+                (gz - means[5]) / std_devs[5],
+                (q0 - means[6]) / std_devs[6],
+                (q1 - means[7]) / std_devs[7],
+                (q2 - means[8]) / std_devs[8],
+                (q3 - means[9]) / std_devs[9]]
 
             # add accelerometer and quarternions to buffer
             dist_array.append(f)
 
-            # push newest measuremet (7 new values) to the buffer
+            # push newest measuremet (FEATURE_LEN new values) to the buffer
             features.extend(f)
 
-            # pop oldest mesurements (7 first values) from the buffer
-            features = features[7:]
+            # pop oldest mesurements (FEATURE_LEN first values) from the buffer
+            features = features[FEATURE_LEN:]
 
             # count the number of new elements for sliding window
             new_elements_count += 1
@@ -132,7 +139,7 @@ def online_inference(interpreter, port, means, std_devs, buffer_size, class_name
                 
                 # Convert the feature list to a NumPy array of type float32
                 np_features = np.array(features, dtype=np.float32)
-                np_features = np_features.reshape((1, int(buffer_size/7), 7, 1))
+                np_features = np_features.reshape((1, int(buffer_size/FEATURE_LEN), FEATURE_LEN, 1))
                 # Add dimension to input sample (TFLite model expects (# samples, data))
                 #np_features = np.expand_dims(np_features, axis=0)
 
@@ -234,23 +241,27 @@ def offline_inference(interpreter, file, means, std_devs, buffer_size, class_nam
         print(len(i))
         print(np.floor(buffer_size / df.shape[1]))
         if len(i) == np.floor(buffer_size / df.shape[1]):
+            print(i)
             # updated preprocessing stage be similar to the online inference
             i['ax'] = (i['ax']*ACCEL_CONVERSION - means[0]) / std_devs[0]
             i['ay'] = (i['ay']*ACCEL_CONVERSION - means[1]) / std_devs[1]
             i['az'] = (i['az']*ACCEL_CONVERSION - means[2]) / std_devs[2]
-            i['q0'] = (i['q0'] - means[3]) / std_devs[3]
-            i['q1'] = (i['q1'] - means[4]) / std_devs[4]
-            i['q2'] = (i['q2'] - means[5]) / std_devs[5]
-            i['q3'] = (i['q3'] - means[6]) / std_devs[6]
+            i['gx'] = (i['gx'] - means[3]) / std_devs[3]
+            i['gy'] = (i['gy'] - means[4]) / std_devs[4]
+            i['gz'] = (i['gz'] - means[5]) / std_devs[5]
+            i['q0'] = (i['q0'] - means[6]) / std_devs[6]
+            i['q1'] = (i['q1'] - means[7]) / std_devs[7]
+            i['q2'] = (i['q2'] - means[8]) / std_devs[8]
+            i['q3'] = (i['q3'] - means[9]) / std_devs[9]
 
             features = i.values.flatten().tolist()
-            features = np.array(features).reshape(-1, 7)
+            features = np.array(features).reshape(-1, FEATURE_LEN)
 
             features = features.flatten().tolist()
 
             # Convert the feature list to a NumPy array of type float32
             np_features = np.array(features, dtype=np.float32)
-            np_features = np_features.reshape((1, int(buffer_size/7), 7, 1))
+            np_features = np_features.reshape((1, int(buffer_size/FEATURE_LEN), FEATURE_LEN, 1))
             # Add dimension to input sample (TFLite model expects (# samples, data))
             #np_features = np.expand_dims(np_features, axis=0)
 
