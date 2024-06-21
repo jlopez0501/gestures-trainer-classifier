@@ -159,7 +159,9 @@ void loop()
     //if ( data.header < 0x100) SERIAL_PORT.print( "0" );
     //if ( data.header < 0x10) SERIAL_PORT.print( "0" );
     //SERIAL_PORT.println( data.header, HEX );
-
+    double q1 = 0, q2 = 0, q3 = 0, q0 = 0;
+    float acc_x = 0, acc_y = 0, acc_z = 0;
+    float gyro_x = 0, gyro_y = 0, gyro_z = 0;
     if ((data.header & DMP_header_bitmap_Quat9) > 0) // We have asked for orientation data so we should receive Quat9
     {
       // Q0 value is computed from this equation: Q0^2 + Q1^2 + Q2^2 + Q3^2 = 1.
@@ -170,21 +172,39 @@ void loop()
       //SERIAL_PORT.println(data.Quat9.Data.Accuracy, 4);
 
       // Scale to +/- 1
-      double q1 = ((double)data.Quat9.Data.Q1) / 1073741824.0; // Convert to double. Divide by 2^30
-      double q2 = ((double)data.Quat9.Data.Q2) / 1073741824.0; // Convert to double. Divide by 2^30
-      double q3 = ((double)data.Quat9.Data.Q3) / 1073741824.0; // Convert to double. Divide by 2^30
-      double q0 = sqrt(1.0 - ((q1 * q1) + (q2 * q2) + (q3 * q3)));
+      q1 = ((double)data.Quat9.Data.Q1) / 1073741824.0; // Convert to double. Divide by 2^30
+      q2 = ((double)data.Quat9.Data.Q2) / 1073741824.0; // Convert to double. Divide by 2^30
+      q3 = ((double)data.Quat9.Data.Q3) / 1073741824.0; // Convert to double. Divide by 2^30
+      q0 = sqrt(1.0 - ((q1 * q1) + (q2 * q2) + (q3 * q3)));
+    }
 
-      float acc_x = (float)data.Raw_Accel.Data.X; // Extract the raw accelerometer data
-      float acc_y = (float)data.Raw_Accel.Data.Y;
-      float acc_z = (float)data.Raw_Accel.Data.Z;
+    if ((data.header & DMP_header_bitmap_Accel) > 0) // Check for Accel
+    {
+      acc_x = (float)data.Raw_Accel.Data.X; // Extract the raw accelerometer data
+      acc_y = (float)data.Raw_Accel.Data.Y;
+      acc_z = (float)data.Raw_Accel.Data.Z;
+    }
 
-      float gyro_x = (float)data.Raw_Gyro.Data.X;
-      float gyro_y = (float)data.Raw_Gyro.Data.Y;
-      float gyro_z = (float)data.Raw_Gyro.Data.Z;
-
+    if ((data.header & DMP_header_bitmap_Gyro) > 0)  // Check for calibrated Gyro data
+    {
+      gyro_x = (float)data.Raw_Gyro.Data.X;
+      gyro_y = (float)data.Raw_Gyro.Data.Y;
+      gyro_z = (float)data.Raw_Gyro.Data.Z;
+    }
 
     //  Output the Quaternion data in the format expected by ZaneL's Node.js Quaternion animation tool
+
+
+      /*
+      // This is for debuggin in Serial plotter
+      SERIAL_PORT.print(gyro_x);
+      SERIAL_PORT.print(",");
+      SERIAL_PORT.print(gyro_y);
+      SERIAL_PORT.print(",");
+      SERIAL_PORT.print(gyro_z);
+      SERIAL_PORT.println();
+      */
+
       SERIAL_PORT.print(F("{\"timeMs\":"));
       SERIAL_PORT.print(millis());
 
@@ -213,6 +233,7 @@ void loop()
 
       SERIAL_PORT.println(F("}"));
 
+
       // For edge impulse
       // SERIAL_PORT.print(millis());
       // SERIAL_PORT.print(",");
@@ -230,7 +251,7 @@ void loop()
       // SERIAL_PORT.print(",");
       // SERIAL_PORT.print(q3, 3);
       // SERIAL_PORT.println();
-    }
+
   }
 
   if (myICM.status != ICM_20948_Stat_FIFOMoreDataAvail) // If more data is available then we should read it right away - and not delay
