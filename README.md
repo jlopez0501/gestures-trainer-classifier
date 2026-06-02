@@ -1,4 +1,19 @@
-# Gestures
+# Gestures Trainer & Classifier
+
+Gym Sense, Inc. was a fitness technology startup built around solving a simple
+problem: manually logging your workouts is tedious and easy to forget.
+If you couldn't remember how many reps you did 10 minutes ago, you were
+left guessing.
+
+Our solution was a custom wristband built on a custom PCB ordered from
+JLCPCB, housed in a 3D printed enclosure developed as a proof of concept.
+The wristband collected inertial measurement data which was used to train
+a machine learning model capable of classifying exercises in real time —
+no manual logging required.
+
+This repository contains the full ML pipeline: data collection via Arduino,
+data cleaning, augmentation, model training, and both live and offline
+inference.
 
 ## Data Preparation
 
